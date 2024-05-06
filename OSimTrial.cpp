@@ -1,5 +1,5 @@
 //// last change on 2024/4/11
-////V1.2
+////V1.4
 ///// update note: scaletool is all set
 
 
@@ -51,11 +51,17 @@ int main() {
 	model.setName("RightArm");
 	//check if model is scalled
 	ScaleTool scaletool = ScaleTool(model_path);
+	////////////////////////////////////////////optional set the gravity
+	model.set_gravity(SimTK::Vec3(9.81, 0, 0));
+	/*model.set_gravity(SimTK::Vec3(0, 0, 0));*/
+
 	//bool run_scale = scaletool.run();
 	// check if scaletool is running
 	//if (run_scale) {
 	//	std::cout << "The scaletool is actived."<< std::endl;
 	//}
+	
+
 	//useing scaletool of model to get model scaler
 	ModelScaler modelScaler = scaletool.getModelScaler();
 	std::cout << "The pass is: " << scaletool.getPathToSubject() << std::endl;
@@ -90,8 +96,10 @@ int main() {
 	Vector nq = initialState.getQ();
 	std::cout << "The geof coordinate of model is: " << nq << std::endl;
 
-	BodySet BodySet = model.getBodySet();
-	JointSet JointSet = model.getJointSet();
+	BodySet BodySet = model.getBodySet(); // get the body set 
+
+	JointSet JointSet = model.getJointSet(); // get the joint set
+
 	std::cout << "The bodies of model are: " << BodySet << std::endl;
 
 	std::cout << std::endl;
@@ -101,6 +109,7 @@ int main() {
 	std::cout << std::endl;
 
 
+	// example here, try to contrl elbow joint first
 	OpenSim::Joint* elbow = &JointSet.get("elbow");
 	OpenSim::Body* radius = &BodySet.get("radius");
 	
@@ -109,10 +118,26 @@ int main() {
 	
 	initialState = model.initSystem();
 	
-	OpenSim::Coordinate jointCooridnate = elbow->get_coordinates(0);
+	OpenSim::Coordinate jointCooridnate = elbow->get_coordinates(0); 
 	//double value_rotation = jointCooridnate.getValue(initialState);
 	double value_rotation = jointCooridnate.getDefaultValue();
 	std::cout << "the rotation angle of elbow is :" << value_rotation << std::endl;
+
+	//setting the controller to rotate elbow
+	// check if there is any controller inside of model
+	ControllerSet controllerset = model.getControllerSet();
+	std::cout << "the controllers in model are:" << controllerset.getControlTable() << std::endl;
+	// its empty, we add contoller by ourself
+	//PrescribedController* brain = new PrescribedController();
+	//brain->addActuator(*elbow);
+	BodyActuator* robot_force = new BodyActuator();
+	robot_force->setPoint(radius_mc);
+	robot_force->setBody(BodySet.get("radius"));
+
+
+
+
+	//end of the code
     return 0;
 
 
