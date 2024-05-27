@@ -8,6 +8,8 @@
 #include <OpenSim/Actuators/CoordinateActuator.h>
 #include <OpenSim/Moco/osimMoco.h>
 #include <OpenSim/Simulation/VisualizerUtilities.h>
+#include <fstream>
+#include <string>
 
 // "Use" the OpenSim namespace and certain SimTK symbols to shorten
 // code ("using namespace SimTK" would cause conflicts for Body).
@@ -17,6 +19,45 @@ using SimTK::Vec3;
 using SimTK::Inertia;
 using SimTK::Pi;
 using SimTK::convertDegreesToRadians;
+using namespace std;
+
+float** readTable(std::string file, int& row, int& col) {
+
+	ifstream inputFile(file);
+	//check if file is opened or not
+	if (!inputFile) {
+		cerr << "Error opening file!" << endl;
+		return nullptr;
+	}
+
+	string skip;
+	for (int i = 0; i < 8; ++i) {
+		getline(inputFile, skip);
+	}
+
+
+	float** table = new float*[row];
+	for (int i = 0; i < row; ++i) {
+		table[i] = new float[col];
+	}
+	for (int i = 0; i < row; ++i) {
+		for (int j = 0; j < col; ++j) {
+			inputFile >> table[i][j];
+		}
+	}
+	inputFile.close();
+	return table;
+}
+
+void printTable(float** table, int rows, int cols) {
+	// Print the table
+	for (int i = 0; i < rows; ++i) {
+		for (int j = 0; j < cols; ++j) {
+			cout << table[i][j] << "\t";
+		}
+		cout << endl;
+	}
+}
 
 // Build an OpenSim model and save it to an OSIM file.
 int main() {
@@ -135,9 +176,59 @@ int main() {
 	robot_force->setBody(BodySet.get("radius"));
 
 
+	// read the inverse Kinematics file
+	std::string ik_path = "D:/D/unimelb/capstone/UpAndStopAndDown0.5s_JointsKin.sto";
+
+	// number of row and col
+	int row = 604;
+	int col = 21;
+	float** ikTable = readTable(ik_path, row, col);
+	if (ikTable != nullptr) {
+		cout << "The table read from the file is:" << endl;
+		printTable(ikTable, row, col);
+	}
+
+	// using moco
+	MocoInverse inverse;
+	inverse.setName("matLab_motion");
+	inverse.setModel(ModelProcessor(model));
 
 
+
+
+	//try to use moco to move the arm by using provided joint position. Two options use study or track
+	
+	MocoStudy study;
+	study.setName("Matlab_example");
+	MocoProblem problem = study.updProblem();
+	// load the model in phase 0
+	problem.setModel(std::make_unique<OpenSim::Model>(model_path));
+	//set start time and end time range
+	problem.setTimeBounds(MocoInitialBounds(0), MocoFinalBounds(0.5, 1.5));
+	//set state infor. Use the path in model file
+	problem.setStateInfo("/jointset/elbow", { 0, 3 }, 1.0);
+	auto* jointControl= problem.addGoal<MocoStateTrackingGoal>();
+	auto pathCon = MocoControlBoundConstraint();
+	MocoSolution solution = study.solve();
+
+	MocoStudy study_id;
+	study_id.setName("I_dynamic");
+	MocoProblem problem = study_id.updProblem();
+	problem.setModel(std::make_unique<OpenSim::Model>(model_path));
+	problem.setTimeBounds(MocoInitialBounds(0), MocoFinalBounds(0.5, 1.5));
+	problem.setStateInfo("/jointset", { 0, 2*Pi});
+
+	MocoInverse inverse;
+	inverse.setName("I_dynamic");
+	inverse.setModel(ModelProcessor("D:/D/unimelb/capstone/MobL_ARMS/MoBL-ARMS Upper/Benchmarking Simulations/4.1 Model with Millard/Geom/MOBL_ARMS_module2_4_allmuscles.osim") |
+		ModOpAddExternalLoads("external_loads.xml") |
+		ModOpAddReserves());
+	/*
+	//set a track
+	MocoTrack track;
+	track.setName("joint_track");
 	//end of the code
+	*/
     return 0;
 
 
