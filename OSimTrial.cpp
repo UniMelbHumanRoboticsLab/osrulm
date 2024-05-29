@@ -1,6 +1,44 @@
-//// last change on 2024/4/11
-////V1.4
-///// update note: scaletool is all set
+/***************************************************************************
+ *                                                                         *
+ *                          PROJECT NAME: OSLRUM			               *
+ *                                                                         *
+ ***************************************************************************
+ * Collaborators:                                                          *
+ * -  KUN CHU															   *
+ * -  KUNNATH SIVAPRASAD                                                   *
+ * - Collaborator 3                                                        *
+ * - Vincent Croacher													   *
+ * Latest Modified: 2024-05-28                                             *
+ *                                                                         *
+ ***************************************************************************
+ *                                                                         *
+ * Status:                                                                 *
+ *                                                                         *
+ * - Start: 20024-03-25                                                    *
+ * - In Progress: Yes													   *
+ * - Completed: No														   *
+ *                                                                         *
+ ***************************************************************************
+ *                                                                         *
+ * Tasks:                                                                  *
+ *                                                                         *
+ * - To Start:                                                             *
+ *   1. Task 1 Description                                                 *
+ *   2. Task 2 Description                                                 *
+ *                                                                         *
+ * - In Progress:                                                          *
+ *   1. MocoInverse for ID                                                 *
+ *   2. Task 2 Description                                                 *
+ *                                                                         *
+ * - Completed:                                                            *
+ *   1. Task 1 Description                                                 *
+ *   2. Task 2 Description                                                 *
+ *                                                                         *
+ * - Debug:		                                                           *
+ *   1. Ulna.vtp copied to the geometry folder, fixing gap in loading models*
+ *   2. Task 2 Description                                                 *
+ *                                                                         *
+ ***************************************************************************/
 
 
 //All of OpenSim and Simbody's classes available.
@@ -58,10 +96,9 @@ void printTable(float** table, int rows, int cols) {
 		cout << endl;
 	}
 }
-
 // Build an OpenSim model and save it to an OSIM file.
 int main() {
-	std::string model_path = "D:/D/unimelb/capstone/MobL_ARMS/MoBL-ARMS Upper/Benchmarking Simulations/4.1 Model with Millard/Geom/MOBL_ARMS_module2_4_allmuscles.osim";
+	std::string model_path = "C:/Users/ksiva/OneDrive/Desktop/Semester 4/Capstone/Simulation Framework/OpenSim Model/MoBL-ARMS Upper Extremity Model/Benchmarking Simulations/4.1 Model with Millard/Geometry/MOBL_ARMS_module2_4_allmuscles.osim";
     try {
 
 		Model model(model_path);
@@ -74,7 +111,7 @@ int main() {
 		
     }
 	catch (const std::exception& ex) {
-		std::cout << ex.what() << std::endl;
+			std::cout << ex.what() << std::endl;
 		return 1;
 	}
 	catch (...) {
@@ -116,7 +153,7 @@ int main() {
 	double orginMass = model.getTotalMass(initialState);
 	std::cout << "The mass of model is: " << orginMass << std::endl;
 	//scale the model
-	bool scaleProcess = modelScaler.processModel(&model, scaletool.getPathToSubject(), 2);
+	bool scaleProcess = modelScaler.processModel(&model, scaletool.getPathToSubject(), 78);
 	
 	if (scaleProcess) {
 		std::cout << "Scale done!" << std::endl;
@@ -129,106 +166,50 @@ int main() {
 	double newnMass = model.getTotalMass(initialState);
 	std::cout << "The mass of model is: " << newnMass << std::endl;
 
-	// virsualization
-	VisualizerUtilities visualizer;
-	visualizer.showModel(model);
 
-	// track the body and joint
-	Vector nq = initialState.getQ();
-	std::cout << "The geof coordinate of model is: " << nq << std::endl;
+	bool test = 1;
+	std::cout << "The step successful " << test << std::endl;
 
-	BodySet BodySet = model.getBodySet(); // get the body set 
-
-	JointSet JointSet = model.getJointSet(); // get the joint set
-
-	std::cout << "The bodies of model are: " << BodySet << std::endl;
-
-	std::cout << std::endl;
-
-	std::cout << "The joints of the model are" << JointSet << std::endl;
-
-	std::cout << std::endl;
-
-
-	// example here, try to contrl elbow joint first
-	OpenSim::Joint* elbow = &JointSet.get("elbow");
-	OpenSim::Body* radius = &BodySet.get("radius");
 	
-	Vec3 radius_mc = radius->getMassCenter();
-	std::cout << "The position of radius is: " << radius_mc << std::endl;
-	
-	initialState = model.initSystem();
-	
-	OpenSim::Coordinate jointCooridnate = elbow->get_coordinates(0); 
-	//double value_rotation = jointCooridnate.getValue(initialState);
-	double value_rotation = jointCooridnate.getDefaultValue();
-	std::cout << "the rotation angle of elbow is :" << value_rotation << std::endl;
-
-	//setting the controller to rotate elbow
-	// check if there is any controller inside of model
-	ControllerSet controllerset = model.getControllerSet();
-	std::cout << "the controllers in model are:" << controllerset.getControlTable() << std::endl;
-	// its empty, we add contoller by ourself
-	//PrescribedController* brain = new PrescribedController();
-	//brain->addActuator(*elbow);
-	BodyActuator* robot_force = new BodyActuator();
-	robot_force->setPoint(radius_mc);
-	robot_force->setBody(BodySet.get("radius"));
-
-
 	// read the inverse Kinematics file
-	std::string ik_path = "D:/D/unimelb/capstone/UpAndStopAndDown0.5s_JointsKin.sto";
+	std::string ik_path = "C:/Users/ksiva/OneDrive/Desktop/Semester 4/Capstone/Simulation Framework/ID/IK/UpAndStopAndDown0.5s_JointsKin.sto";
 
-	// number of row and col
-	int row = 604;
-	int col = 21;
-	float** ikTable = readTable(ik_path, row, col);
-	if (ikTable != nullptr) {
-		cout << "The table read from the file is:" << endl;
-		printTable(ikTable, row, col);
-	}
-
+	std::string extFrc_path = "C:/Users/ksiva/OneDrive/Desktop/Semester 4/Capstone/Simulation Framework/ID/IK/ExtForce.xml";
+	std::string extFrcsto_path = "C:/Users/ksiva/OneDrive/Desktop/Semester 4/Capstone/Simulation Framework/ID/IK/UpAndStopAndDown0.5s_ConstForceLoad.sto";
+	// Verify the external force file has sufficient data points before proceeding
 	// using moco
-	MocoInverse inverse;
-	inverse.setName("matLab_motion");
-	inverse.setModel(ModelProcessor(model));
+	try {
+		MocoInverse inverse;
+		inverse.setName("matLab_motion");
 
+		ModelProcessor modelProcessor(model);
+		modelProcessor.append(ModOpAddExternalLoads(extFrc_path));
+		modelProcessor.append(ModOpAddReserves());
+		inverse.setModel(modelProcessor);
 
+		inverse.setKinematics(TableProcessor(ik_path));
+		inverse.set_mesh_interval(0.002);
+		inverse.set_initial_time(0);
+		inverse.set_final_time(1.2);
+		MocoInverseSolution solution = inverse.solve();
+		solution.getMocoSolution().write("MocoInverse_solution.sto");
 
-
-	//try to use moco to move the arm by using provided joint position. Two options use study or track
+		bool test2 = 1;
+		std::cout << "The step successful " << test2 << std::endl;
+	}
+	catch (const std::exception& ex) {
+		std::cout << "Exception: " << ex.what() << std::endl;
+		return 1;
+	}
+	catch (...) {
+		std::cout << "UNRECOGNIZED EXCEPTION" << std::endl;
+		return 1;
+	}
+	/*MocoInverseSolution solution = inverse.solve();
+	solution.getMocoSolution().write("MocoInverse_solution.sto");*/
+	/*bool test = solution.getMocoSolution().success();
+	std::cout << "The inverse dynamics test was successful? :" << test << std::endl;*/
 	
-	MocoStudy study;
-	study.setName("Matlab_example");
-	MocoProblem problem = study.updProblem();
-	// load the model in phase 0
-	problem.setModel(std::make_unique<OpenSim::Model>(model_path));
-	//set start time and end time range
-	problem.setTimeBounds(MocoInitialBounds(0), MocoFinalBounds(0.5, 1.5));
-	//set state infor. Use the path in model file
-	problem.setStateInfo("/jointset/elbow", { 0, 3 }, 1.0);
-	auto* jointControl= problem.addGoal<MocoStateTrackingGoal>();
-	auto pathCon = MocoControlBoundConstraint();
-	MocoSolution solution = study.solve();
-
-	MocoStudy study_id;
-	study_id.setName("I_dynamic");
-	MocoProblem problem = study_id.updProblem();
-	problem.setModel(std::make_unique<OpenSim::Model>(model_path));
-	problem.setTimeBounds(MocoInitialBounds(0), MocoFinalBounds(0.5, 1.5));
-	problem.setStateInfo("/jointset", { 0, 2*Pi});
-
-	MocoInverse inverse;
-	inverse.setName("I_dynamic");
-	inverse.setModel(ModelProcessor("D:/D/unimelb/capstone/MobL_ARMS/MoBL-ARMS Upper/Benchmarking Simulations/4.1 Model with Millard/Geom/MOBL_ARMS_module2_4_allmuscles.osim") |
-		ModOpAddExternalLoads("external_loads.xml") |
-		ModOpAddReserves());
-	/*
-	//set a track
-	MocoTrack track;
-	track.setName("joint_track");
-	//end of the code
-	*/
     return 0;
 
 
