@@ -34,9 +34,9 @@
  *   1. Task 1 Description                                                 *
  *   2. Task 2 Description                                                 *
  *                                                                         *
- * - Debug:		                                                           *
+ * - Debug:		                                                   *
  *   1. Ulna.vtp copied to the geometry folder, fixing gap in loading models*
- *   2. Task 2 Description                                                 *
+ *   2. MocoInverse not converging.                                        *
  *                                                                         *
  ***************************************************************************/
 
