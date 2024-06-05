@@ -175,7 +175,6 @@ int main() {
 	std::string ik_path = "C:/Users/ksiva/OneDrive/Desktop/Semester 4/Capstone/Simulation Framework/ID/IK/UpAndStopAndDown0.5s_JointsKin.sto";
 
 	std::string extFrc_path = "C:/Users/ksiva/OneDrive/Desktop/Semester 4/Capstone/Simulation Framework/ID/IK/ExtForce.xml";
-	std::string extFrcsto_path = "C:/Users/ksiva/OneDrive/Desktop/Semester 4/Capstone/Simulation Framework/ID/IK/UpAndStopAndDown0.5s_ConstForceLoad.sto";
 	// Verify the external force file has sufficient data points before proceeding
 	// using moco
 	try {
@@ -185,8 +184,9 @@ int main() {
 		ModelProcessor modelProcessor(model);
 		modelProcessor.append(ModOpAddExternalLoads(extFrc_path));
 		modelProcessor.append(ModOpAddReserves());
+		modelProcessor.append(ModOpIgnoreTendonCompliance());
 		inverse.setModel(modelProcessor);
-
+		
 		inverse.setKinematics(TableProcessor(ik_path));
 		inverse.set_mesh_interval(0.002);
 		inverse.set_initial_time(0);
@@ -194,8 +194,6 @@ int main() {
 		MocoInverseSolution solution = inverse.solve();
 		solution.getMocoSolution().write("MocoInverse_solution.sto");
 
-		bool test2 = 1;
-		std::cout << "The step successful " << test2 << std::endl;
 	}
 	catch (const std::exception& ex) {
 		std::cout << "Exception: " << ex.what() << std::endl;
