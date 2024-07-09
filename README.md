@@ -1,7 +1,8 @@
+# osrulm
 #vs 2017 product key
 KBJFW-NXHK6-W4WJM-CRMQB-G3CDH
 4F3PR-NFKDB-8HFP7-9WXGY-K77T7
-# osrulm
+
 OpenSim Upper-Limb modelling for pHRI
 v1.4 of code 29/04/2024
 The visualizer is added in the OSimTrial. Import <OpenSim/Simulation/VisualizerUtilities.h> to use the visulizer
