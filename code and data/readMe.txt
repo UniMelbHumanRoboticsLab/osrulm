@@ -7,7 +7,7 @@ Files in folder
 
 1. The main projct file which contains main c++ function for the project
 
-2. The external force sto files and joint positions files
+2. The external force sto files and joint positions files are stroed in the folder "force and joint position"
 
 3. The left file in build for the project
 
