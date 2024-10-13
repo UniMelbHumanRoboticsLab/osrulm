@@ -1,24 +1,26 @@
 ---------------------------------------------------
 ---------------------------------------------------
 
-HOW TO OPEN AN OSIM MODEL IN C++
-
+Files in folder
 ---------------------------------------------------
 ---------------------------------------------------
 
-1. Go to "C:\Users\SKUNNATH\Documents\OpenSim\4.5-2024-01-10-3b63585\Models\ <Open the file>
-2. Make a new folder 'Geom'.
-3. Copy the .osim file to the Geom file.
-4. Go to "C:\OpenSim 4.5-2024-01-10-3b63585\Geometry" and copy all files to the new Geom file created.
-5. The .osim files refer to these vtp files for importing geometry to these files.
-6. Make changes in the directory for the model importing line of .cpp code.
+1. The main projct file which contains main c++ function for the project
+
+2. The external force sto files and joint positions files
+
+3. The left file in build for the project
+
+4. the xml file for the Opensim project generation
+---------------------------------------------------
+---------------------------------------------------
+
+What you could edit
 
 ---------------------------------------------------
 ---------------------------------------------------
+Please edit the.xml file once you want to change the input external force data
 
-VERIFICATION
+Please edit and run OSimTrial
 
----------------------------------------------------
----------------------------------------------------
-The lines 17 and 18 of the .cpp file output the number of bodies in the model and list the names 
-of the bodies in the model. This corresponds to the body names and count in Opensim.
+The result from the project is stroed in folder "Build"
