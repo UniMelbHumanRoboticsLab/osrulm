@@ -1,6 +1,8 @@
 # Upper-Limb Musculoskeletal  Study: Integrating External-Forces for In-Depth Analysis of Robotic Assistance and Motor Learning
 
-#Sivaprasad Kunnath, Kun Chu
+By Sivaprasad Kunnath, Kun Chu
+
+Supervised by Dr. Vincent Crocher, Prof. Denny Oetomo, Mr Xinliang Guo
 
 
 
