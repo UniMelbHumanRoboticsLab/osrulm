@@ -7,4 +7,6 @@
 
 #install Cmake
 
-#Down load zip file of Arm Model
+#Down load arm model from https://simtk.org/projects/upexdyn
+
+#
