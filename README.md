@@ -7,7 +7,7 @@ Supervised by Dr. Vincent Crocher, Prof. Denny Oetomo, Mr Xinliang Guo
 
 
 ---------------------------------------------------
-# Item contains in this folder
+# Item in this folder
 1. The MATLAB and Python code for arm joint positon data and deweighting force gneration
 2. The simulation code of Opnensim API C++ file
 3. The result data of interations including muscle activation data and muscle force data
