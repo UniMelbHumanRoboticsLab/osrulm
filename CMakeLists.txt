@@ -24,7 +24,7 @@ set(CMAKE_CONFIGURATION_TYPES "RelWithDebInfo;Release"
 # Define an executable to be created from the provided C++ source files.
 add_executable(OSimTrial src/OSimTrial.cpp)
 
-# Link to OpenSim and Simbody libraries.
+# Link to OpenSim, Simbody and Moco libraries.
 target_link_libraries(OSimTrial osimTools)
 target_link_libraries(OSimTrial osimMoco)
 

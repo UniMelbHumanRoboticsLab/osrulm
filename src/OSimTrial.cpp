@@ -222,8 +222,8 @@ int main() {
 		for (int i = 0; i < numberMuscles; i++) {
 			Muscle* mm = &model.getMuscles().get(i);
 			Millard2012EquilibriumMuscle* mmM = static_cast<Millard2012EquilibriumMuscle*>(mm);
-			//mmM->setDefaultActivation(0.05); //Osim API is broken, accessors don;t work
-			//mmM->setFiberDamping(0.017); // the article mention it is 0.017, try this value later //Osim API is broken, accessors don;t work
+			mmM->setDefaultActivation(0.05); //Osim API is broken, accessors don;t work
+			mmM->setFiberDamping(0.017); // the article mention it is 0.017, try this value later //Osim API is broken, accessors don;t work
 		}
 
 		DeGrooteFregly2016Muscle newMuscle = DeGrooteFregly2016Muscle();

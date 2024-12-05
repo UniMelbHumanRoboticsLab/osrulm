@@ -22,7 +22,7 @@ The objective of this project is thus to integrate external forces as applied by
 
 The project uses or depends on the following third-party software and packages:
 
- - Visual Studio 2019 or 2022
+ - Visual Studio 2017 (or 2019?)
  - cmake >3.2 
  - OpenSIM 4.5
  - The MoBL-ARMS Dynamic Upper Limb model from https://simtk.org/projects/upexdyn
